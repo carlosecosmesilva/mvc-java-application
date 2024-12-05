@@ -23,12 +23,12 @@
                             <a class="nav-link" href="/aplicacaoMVC/admin/logOut">Logout</a>
                 <%  } else { %>
                             <!-- Links visíveis para visitantes -->
-                            <!-- <a class="nav-link" href="/aplicacaoMVC/MostrarComentarios">Comentários</a> -->
+                            <a href="/aplicacaoMVC/public/DashboardController?acao=listarDisciplinas">Disciplinas Disponíveis</a>
                             <a class="nav-link" href="/aplicacaoMVC/AutenticaController?acao=Login">Login</a>
                 <%    }
                     } else { %>
                         <!-- Links visíveis caso a sessão seja inexistente -->
-                        <!-- <a class="nav-link" href="/aplicacaoMVC/MostrarComentarios">Comentários</a> -->
+                        <a href="/aplicacaoMVC/public/DashboardController?acao=listarDisciplinas">Disciplinas Disponíveis</a>
                         <a class="nav-link" href="/aplicacaoMVC/AutenticaController?acao=Login">Login</a>
                 <% } %>
             </div>

@@ -3,16 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/src/java/model/Conexao.java</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/src/java/controller/admin/AlunoController.java</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/src/java/controller/admin/ProfessorController.java</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/web/views/admin/aluno/listaAlunos.jsp</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/nbproject/build-impl.xml</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/src/java/entidade/Aluno.java</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/src/java/model/AlunoDAO.java</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/web/views/admin/aluno/formAluno.jsp</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/web/views/comum/menu.jsp</file>
-            <file>file:/D:/Faculdade/Periodo-6/Introdução%20a%20Dev%20Web/PArna/aplicacaoMVC/src/java/filtro/filtroRestrito.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/model/DisciplinaDAO.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/web/views/comum/menu.jsp</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/web/views/public/dashboard.jsp</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/entidade/Disciplina.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/admin/DashboardController.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/PublicController.java</file>
         </group>
     </open-files>
 </project-private>

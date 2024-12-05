@@ -7,6 +7,7 @@ public class Disciplina {
     private String requisito;
     private String ementa;
     private int cargaHoraria;
+    private int vagasDisponiveis;
 
     // Construtor padrão
     public Disciplina() {
@@ -69,4 +70,13 @@ public class Disciplina {
     public void setCargaHoraria(int cargaHoraria) {
         this.cargaHoraria = cargaHoraria;
     }
+
+    public int getVagasDisponiveis() {
+        return vagasDisponiveis;
+    }
+
+    public void setVagasDisponiveis(int vagasDisponiveis) {
+        this.vagasDisponiveis = vagasDisponiveis;
+    }
+
 }

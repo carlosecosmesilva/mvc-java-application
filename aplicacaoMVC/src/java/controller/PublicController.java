@@ -10,9 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.ArrayList;
+import javax.servlet.RequestDispatcher;
 
-@WebServlet(name = "DashboardController", urlPatterns = "/public/DashboardController")
+@WebServlet(name = "PublicController", urlPatterns = "/public/PublicController")
 public class PublicController extends HttpServlet {
 
     private final DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
@@ -22,13 +23,15 @@ public class PublicController extends HttpServlet {
         String acao = request.getParameter("acao");
         try {
             if ("listarDisciplinas".equals(acao)) {
-                List<Disciplina> listaDisciplinas = disciplinaDAO.listarDisciplinasComVagas();
-                request.setAttribute("listaDisciplinas", listaDisciplinas);
-                request.getRequestDispatcher("/views/public/dashboard.jsp").forward(request, response);
+                ArrayList<Disciplina> disciplinas = disciplinaDAO.listarDisciplinasComVagas();
+                request.setAttribute("listaDisciplinas", disciplinas);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/views/public/dashboard.jsp");
+                dispatcher.forward(request, response);
             }
         } catch (SQLException e) {
             request.setAttribute("mensagemErro", "Erro ao carregar disciplinas: " + e.getMessage());
             request.getRequestDispatcher("/views/comum/erro.jsp").forward(request, response);
         }
     }
+
 }

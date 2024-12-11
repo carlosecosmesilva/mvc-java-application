@@ -27,7 +27,11 @@ public class Disciplina {
     }
 
     public Disciplina(int id, String nome, String requisito, String ementa, int cargaHoraria) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.id = id;
+        this.nome = nome;
+        this.requisito = requisito;
+        this.ementa = ementa;
+        this.cargaHoraria = cargaHoraria;
     }
 
     // Getters e Setters

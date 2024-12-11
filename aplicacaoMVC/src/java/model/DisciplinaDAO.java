@@ -102,17 +102,32 @@ public class DisciplinaDAO {
     }
 
     // Listar as disciplinas com vagas
-    public List<Disciplina> listarDisciplinasComVagas() throws SQLException {
-        List<Disciplina> disciplinas = new ArrayList<>();
-        String sql = "SELECT id, nome, (vagas_totais - vagas_ocupadas) AS vagas_disponiveis FROM disciplina";
+    public ArrayList<Disciplina> listarDisciplinasComVagas() throws SQLException {
+        ArrayList<Disciplina> disciplinas = new ArrayList<>();
+        // Número fixo de vagas por disciplina
+        final int TOTAL_VAGAS = 30;
+        String sql
+                = "SELECT d.id, d.nome, "
+                + "       (CASE "
+                + "           WHEN COUNT(t.id) IS NULL THEN ? "
+                + "           ELSE (? - COUNT(t.id)) "
+                + "       END) AS vagas_disponiveis "
+                + "FROM disciplina d "
+                + "LEFT JOIN turmas t ON d.id = t.disciplina_id "
+                + "GROUP BY d.id, d.nome "
+                + "ORDER BY d.nome";
         Conexao conexao = new Conexao();
-        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                Disciplina disciplina = new Disciplina();
-                disciplina.setId(rs.getInt("id"));
-                disciplina.setNome(rs.getString("nome"));
-                disciplina.setVagasDisponiveis(rs.getInt("vagas_disponiveis"));
-                disciplinas.add(disciplina);
+        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
+            stmt.setInt(1, TOTAL_VAGAS);
+            stmt.setInt(2, TOTAL_VAGAS);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Disciplina disciplina = new Disciplina();
+                    disciplina.setId(rs.getInt("id"));
+                    disciplina.setNome(rs.getString("nome"));
+                    disciplina.setVagasDisponiveis(rs.getInt("vagas_disponiveis"));
+                    disciplinas.add(disciplina);
+                }
             }
         }
         return disciplinas;

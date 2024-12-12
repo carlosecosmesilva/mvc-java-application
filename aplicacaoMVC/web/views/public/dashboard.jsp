@@ -18,7 +18,7 @@
                 <h1 class="mb-4">Dashboard</h1>
 
                 <div class="mb-3">
-                    <a href="/aplicacaoMVC/public/home" class="btn btn-secondary">Retornar</a>
+                    <a href="/views/public/home" class="btn btn-secondary">Retornar</a>
                 </div>
 
                 <div class="card mb-4">

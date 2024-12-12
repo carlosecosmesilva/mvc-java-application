@@ -58,7 +58,7 @@ public class DisciplinaController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String acao = request.getParameter("acao");
+        String btEnviar = request.getParameter("btEnviar");
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             String nome = request.getParameter("nome");
@@ -69,7 +69,7 @@ public class DisciplinaController extends HttpServlet {
             // Verificar se os campos obrigatórios estão preenchidos
             if (nome.isEmpty() || requisito.isEmpty() || ementa.isEmpty()) {
                 request.setAttribute("disciplina", new Disciplina(id, nome, requisito, ementa, cargaHoraria));
-                request.setAttribute("acao", acao);
+                request.setAttribute("btEnviar", btEnviar);
                 request.setAttribute("msgError", "É necessário preencher todos os campos obrigatórios.");
                 request.getRequestDispatcher("/views/admin/disciplina/formDisciplina.jsp").forward(request, response);
                 return;
@@ -77,7 +77,7 @@ public class DisciplinaController extends HttpServlet {
 
             Disciplina disciplina = new Disciplina(id, nome, requisito, ementa, cargaHoraria);
             RequestDispatcher rd;
-            switch (acao) {
+            switch (btEnviar) {
                 case "Incluir":
                     disciplinaDAO.inserir(disciplina);
                     request.setAttribute("msgOperacaoRealizada", "Inclusão realizada com sucesso.");

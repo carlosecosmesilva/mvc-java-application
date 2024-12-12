@@ -1,6 +1,7 @@
 package controller.admin;
 
 import entidade.Turma;
+import model.TurmaDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -10,12 +11,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.TurmaDAO;
+import entidade.Aluno;
+import entidade.Disciplina;
+import entidade.Professor;
+import model.ProfessorDAO;
+import model.DisciplinaDAO;
+import model.AlunoDAO;
 
 @WebServlet(name = "TurmaController", urlPatterns = "/admin/TurmaController")
 public class TurmaController extends HttpServlet {
 
     private final TurmaDAO turmaDAO = new TurmaDAO();
+    private final AlunoDAO alunoDAO = new AlunoDAO();
+    private final ProfessorDAO professorDAO = new ProfessorDAO();
+    private final DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,6 +44,10 @@ public class TurmaController extends HttpServlet {
                         Turma novaTurma = new Turma();
                         request.setAttribute("turma", novaTurma);
                         request.setAttribute("acao", "Incluir");
+
+                        // Envia as listas necessárias para o JSP
+                        carregarListasParaFormulario(request);
+
                         rd = request.getRequestDispatcher("/views/admin/turma/formTurma.jsp");
                         rd.forward(request, response);
                         break;
@@ -45,6 +58,10 @@ public class TurmaController extends HttpServlet {
                         Turma turmaExistente = turmaDAO.getTurma(id);
                         request.setAttribute("turma", turmaExistente);
                         request.setAttribute("acao", acao);
+
+                        // Envia as listas necessárias para o JSP
+                        carregarListasParaFormulario(request);
+
                         rd = request.getRequestDispatcher("/views/admin/turma/formTurma.jsp");
                         rd.forward(request, response);
                         break;
@@ -58,6 +75,20 @@ public class TurmaController extends HttpServlet {
             request.setAttribute("mensagemErro", "Erro ao processar a ação: " + e.getMessage());
             request.getRequestDispatcher("/views/comum/erro.jsp").forward(request, response);
         }
+    }
+
+    /**
+     * Carrega as listas de professores, disciplinas e alunos e as insere no
+     * request.
+     */
+    private void carregarListasParaFormulario(HttpServletRequest request) throws SQLException {
+        List<Professor> listaProfessores = professorDAO.getAll(); 
+        List<Disciplina> listaDisciplinas = disciplinaDAO.listar();
+        List<Aluno> listaAlunos = alunoDAO.getAll();
+
+        request.setAttribute("listaProfessores", listaProfessores);
+        request.setAttribute("listaDisciplinas", listaDisciplinas);
+        request.setAttribute("listaAlunos", listaAlunos);
     }
 
     @Override
@@ -114,4 +145,3 @@ public class TurmaController extends HttpServlet {
         }
     }
 }
-

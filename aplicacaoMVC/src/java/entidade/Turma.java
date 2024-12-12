@@ -29,7 +29,12 @@ public class Turma {
     }
 
     public Turma(int id, int professorId, int disciplinaId, int alunoId, String codigoTurma, double nota) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.id = id;
+        this.professorId = professorId;
+        this.disciplinaId = disciplinaId;
+        this.alunoId = alunoId;
+        this.codigoTurma = codigoTurma;
+        this.nota = nota;
     }
 
     // Getters e Setters

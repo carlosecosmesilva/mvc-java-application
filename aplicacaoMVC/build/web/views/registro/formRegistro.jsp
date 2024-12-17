@@ -44,6 +44,13 @@
                         <label for="senha" class="form-label">Redigite a senha</label>
                         <input type="password" name="senha2" value="111" class="form-control">
                     </div>
+                    <div class="mb-3">
+                        <label for="aprovado" class="form-label">Aprovado</label>
+                        <select name="aprovado" class="form-control">
+                            <option value="S">Sim</option>
+                            <option value="N">Não</option>
+                        </select>
+                    </div>
                     <div class="row">
                         <div class="col-sm-2">
                             <input type="submit" value="Enviar" class="btn btn-primary">  

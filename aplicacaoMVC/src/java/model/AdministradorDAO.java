@@ -21,24 +21,6 @@ CREATE TABLE IF NOT EXISTS `Administrador` (
  */
 public class AdministradorDAO {
 
-    public void Inserir(Administrador Administrador) throws Exception {
-        Conexao conexao = new Conexao();
-        try {
-            PreparedStatement sql = conexao.getConexao().prepareStatement("INSERT INTO Administrador (nome, cpf, endereco, senha)"
-                    + " VALUES (?,?,?,?)");
-            sql.setString(1, Administrador.getNome());
-            sql.setString(2, Administrador.getCpf());
-            sql.setString(3, Administrador.getEndereco());
-            sql.setString(4, Administrador.getSenha());
-            sql.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException();
-        } finally {
-            conexao.closeConexao();
-        }
-    }
-
     public Administrador getAdministrador(int id) throws Exception {
         Conexao conexao = new Conexao();
         try {
@@ -149,6 +131,27 @@ public class AdministradorDAO {
         } finally {
             conexao.closeConexao();
         }
+    }
+
+    public boolean Inserir(Administrador admin) throws Exception {
+        Conexao conexao = new Conexao();
+        try {
+            PreparedStatement sql = conexao.getConexao().prepareStatement("INSERT INTO Administrador (nome, cpf, endereco, senha, aprovado)"
+                    + " VALUES (?,?,?,?,?)");
+            sql.setString(1, admin.getNome());
+            sql.setString(2, admin.getCpf());
+            sql.setString(3, admin.getEndereco());
+            sql.setString(4, admin.getSenha());
+            sql.setString(5, admin.getAprovado());
+            sql.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            conexao.closeConexao();
+        }
+
     }
 
 }

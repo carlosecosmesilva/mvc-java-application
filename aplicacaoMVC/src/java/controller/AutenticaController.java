@@ -61,8 +61,7 @@ public class AutenticaController extends HttpServlet {
                 rd.forward(request, response);
             }
         } catch (Exception ex) {
-            // Erro no banco de dados ou na query
-            ex.printStackTrace();
+// Erro no banco de dados ou na query
             request.setAttribute("msgError", "Erro no sistema. Tente novamente mais tarde.");
             rd = request.getRequestDispatcher("/views/comum/erro.jsp");
             rd.forward(request, response);

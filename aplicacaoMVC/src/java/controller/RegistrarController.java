@@ -2,6 +2,8 @@ package controller;
 
 import entidade.Administrador;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,13 +33,57 @@ public class RegistrarController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        String nome = request.getParameter("nome");
+        String endereco = request.getParameter("endereco");
+        String cpf = request.getParameter("cpf");
+        String senha = request.getParameter("senha");
+        String senha2 = request.getParameter("senha2");
+        String aprovado = request.getParameter("aprovado");
+
+        if (nome == null || nome.isEmpty() || 
+            endereco == null || endereco.isEmpty() || 
+            cpf == null || cpf.isEmpty() || 
+            senha == null || senha.isEmpty()) {
+            
+            request.setAttribute("msgError", "Todos os campos são obrigatórios!");
+            RequestDispatcher rd = request.getRequestDispatcher("/views/registro/formRegistro.jsp");
+            rd.forward(request, response);
+            return;
+        }
+
+        if (!senha.equals(senha2)) {
+            request.setAttribute("msgError", "As senhas não coincidem!");
+            RequestDispatcher rd = request.getRequestDispatcher("/views/registro/formRegistro.jsp");
+            rd.forward(request, response);
+            return;
+        }
+
+        Administrador admin = new Administrador();
+        admin.setNome(nome);
+        admin.setEndereco(endereco);
+        admin.setCpf(cpf);
+        admin.setSenha(senha);
+        admin.setAprovado(aprovado);
+
+        AdministradorDAO administradorDao = new AdministradorDAO();
+        boolean sucesso = false;
+        try {
+            sucesso = administradorDao.Inserir(admin);
+        } catch (Exception ex) {
+            Logger.getLogger(RegistrarController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         RequestDispatcher rd;
-        request.setAttribute("msgOperacaoRealizada", "Operação não implementada");
-        request.setAttribute("link", "home");
-        rd = request.getRequestDispatcher("/views/comum/showMessage.jsp");
+        if (sucesso) {
+            request.setAttribute("msgOperacaoRealizada", "Administrador cadastrado com sucesso!");
+            request.setAttribute("link", "home");
+            rd = request.getRequestDispatcher("/views/comum/showMessage.jsp");
+        } else {
+            request.setAttribute("msgError", "Erro ao cadastrar administrador. Tente novamente.");
+            rd = request.getRequestDispatcher("/views/registro/formRegistro.jsp");
+        }
         rd.forward(request, response);
-
     }
 
 }

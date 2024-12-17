@@ -5,8 +5,12 @@
         <group>
             <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/admin/RelatorioController.java</file>
             <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/admin/TurmaController.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/RegistrarController.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/AutenticaController.java</file>
             <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/web/views/comum/menu.jsp</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/web/views/registro/formRegistro.jsp</file>
             <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/admin/DashboardController.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/model/Dao.java</file>
         </group>
     </open-files>
 </project-private>

@@ -1,35 +1,51 @@
 package controller.admin;
 
+import entidade.Disciplina;
 import entidade.Relatorio;
-import java.io.IOException;
-import java.util.List;
+import entidade.Turma;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import model.DisciplinaDAO;
 import model.RelatorioDAO;
+import model.TurmaDAO;
 
-@WebServlet(name="RelatorioController", urlPatterns = {"/admin/relatorios"})
+@WebServlet(name = "RelatorioController", urlPatterns = {"/admin/RelatorioController"})
 public class RelatorioController extends HttpServlet {
+
+    private final TurmaDAO turmaDAO = new TurmaDAO();
+    private final DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String acao = request.getParameter("acao");
         try {
-            if (acao != null) {
-                switch (acao) {
-                    case "ListarDisciplinas":
-                        RelatorioDAO relatorioDAO = new RelatorioDAO();
-                        List<Relatorio> relatorios = relatorioDAO.gerarRelatorioDisciplinas();
-                        request.setAttribute("relatorios", relatorios);
-                        request.getRequestDispatcher("views/admin/dashboard/relatorio.jsp").forward(request, response);
-                        break;
-                }
+            String disciplinaId = request.getParameter("disciplinaId");
+            String turmaId = request.getParameter("turmaId");
+
+            List<Disciplina> listaDisciplinas = disciplinaDAO.listar();
+            List<Turma> listaTurmas = turmaDAO.listar();
+
+            request.setAttribute("listaDisciplinas", listaDisciplinas);
+            request.setAttribute("listaTurmas", listaTurmas);
+
+            String acao = request.getParameter("acao");
+            if ("gerarRelatorio".equals(acao)) {
+                List<Relatorio> relatorios = RelatorioDAO.gerarRelatorioDisciplinas(disciplinaId, turmaId);
+                request.setAttribute("relatorios", relatorios);
             }
-        } catch (IOException | ServletException ex) {
-            System.out.println(ex.getMessage());
-            throw new RuntimeException("Falha ao gerar relatório.");
+
+            // Encaminha para a página JSP
+            request.getRequestDispatcher("/views/admin/relatorios/formRelatorio.jsp").forward(request, response);
+
+        } catch (IOException | SQLException | ServletException e) {
+            request.setAttribute("msgError", "Ocorreu um erro ao gerar o relatório: " + e.getMessage());
+            request.getRequestDispatcher("/views/admin/relatorio.jsp").forward(request, response);
         }
     }
 }

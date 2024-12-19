@@ -19,8 +19,8 @@ public class DashboardController extends HttpServlet {
         try {
             if ("relatorio".equals(acao)) {
                 RelatorioDAO relatorioDAO = new RelatorioDAO();
-                List<Relatorio> relatorios = relatorioDAO.gerarRelatorioDisciplinas();
-                request.setAttribute("relatorios", relatorios);
+                //List<Relatorio> relatorios = relatorioDAO.gerarRelatorioDisciplinas();
+                //request.setAttribute("relatorios", relatorios);
                 request.getRequestDispatcher("views/admin/dashboard/relatorio.jsp").forward(request, response);
             } else {
                 request.getRequestDispatcher("/views/admin/dashboard/areaRestrita.jsp").forward(request, response);

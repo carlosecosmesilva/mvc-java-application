@@ -2,6 +2,7 @@
 <%@page import="java.util.List"%>
 <%@page import="entidade.Disciplina"%>
 <%@page import="entidade.Turma"%>
+<%@page import="entidade.Relatorio"%>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -25,34 +26,25 @@
                         String msgError = (String) request.getAttribute("msgError");
                         List<Disciplina> disciplinas = (List<Disciplina>) request.getAttribute("listaDisciplinas");
                         List<Turma> turmas = (List<Turma>) request.getAttribute("listaTurmas");
+                        List<Relatorio> relatorios = (List<Relatorio>) request.getAttribute("relatorios");
 
                         if ((msgError != null) && (!msgError.isEmpty())) {%>
-                            <div class="alert alert-danger" role="alert">
-                                <%= msgError %>
-                            </div>
-                        <% } %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= msgError%>
+                    </div>
+                    <% } %>
 
                     <form action="/aplicacaoMVC/admin/RelatorioController" method="GET">
-
-                        <!-- Filtro por Período -->
-                        <div class="mb-3">
-                            <label for="dataInicio" class="form-label">Data de Início</label>
-                            <input type="date" name="dataInicio" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="dataFim" class="form-label">Data de Fim</label>
-                            <input type="date" name="dataFim" class="form-control">
-                        </div>
-
                         <!-- Filtro por Disciplina -->
                         <div class="mb-3">
                             <label for="disciplinaId" class="form-label">Disciplina</label>
                             <select name="disciplinaId" class="form-select">
                                 <option value="">Selecione uma disciplina</option>
-                                <% for (Disciplina disciplina : disciplinas) { %>
-                                    <option value="<%= disciplina.getId() %>"><%= disciplina.getNome() %></option>
-                                <% } %>
+                                <% if (disciplinas != null) {
+                                        for (Disciplina disciplina : disciplinas) {%>
+                                <option value="<%= disciplina.getId()%>"><%= disciplina.getNome()%></option>
+                                <%  }
+                                    } %>
                             </select>
                         </div>
 
@@ -61,21 +53,56 @@
                             <label for="turmaId" class="form-label">Turma</label>
                             <select name="turmaId" class="form-select">
                                 <option value="">Selecione uma turma</option>
-                                <% for (Turma turma : turmas) { %>
-                                    <option value="<%= turma.getId() %>"><%= turma.getCodigoTurma() %></option>
-                                <% } %>
+                                <% if (turmas != null) {
+                                        for (Turma turma : turmas) {%>
+                                <option value="<%= turma.getId()%>"><%= turma.getCodigoTurma()%></option>
+                                <%  }
+                                    } %>
                             </select>
                         </div>
 
                         <div>
-                            <input type="submit" name="btGerar" value="Gerar Relatório" class="btn btn-primary">
+                            <input type="submit" name="acao" value="gerarRelatorio" class="btn btn-primary">
                             <a href="/aplicacaoMVC/admin/dashboard" class="btn btn-secondary">Voltar</a>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
 
+            <!-- Exibição do Relatório -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <%
+                        if (relatorios != null && !relatorios.isEmpty()) { %>
+                    <h2>Resultados do Relatório</h2>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Disciplina</th>
+                                <th>Turma</th>
+                                <th>Aluno</th>
+                                <th>Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (Relatorio rel : relatorios) {%>
+                            <tr>
+                                <td><%= rel.getDisciplina()%></td>
+                                <td><%= rel.getTurma()%></td>
+                                <td><%= rel.getAluno()%></td>
+                                <td><%= rel.getNota()%></td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                    <% } else if (request.getAttribute("relatorios") != null) { %>
+                    <div class="alert alert-warning" role="alert">
+                        Nenhum dado encontrado para os filtros aplicados.
+                    </div>
+                    <% }%>
+                </div>
+            </div>
+        </div>
         <script src="http://localhost:8080/aplicacaoMVC/views/bootstrap/bootstrap.bundle.min.js"></script>
     </body>
 </html>

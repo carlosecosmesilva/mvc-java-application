@@ -7,36 +7,53 @@ import java.util.List;
 
 public class RelatorioDAO {
 
-    // Método para gerar o relatório de disciplinas
-    public List<Relatorio> gerarRelatorioDisciplinas() {
+    public static List<Relatorio> gerarRelatorioDisciplinas(String disciplinaId, String turmaId) throws SQLException {
         List<Relatorio> relatorios = new ArrayList<>();
-        String sql = "SELECT d.nome AS disciplina, t.nome AS turma, a.nome AS aluno, i.nota "
-                + "FROM disciplina d "
-                + "JOIN turma t ON d.id = t.disciplina_id "
-                + "JOIN inscricao i ON t.id = i.turma_id "
-                + "JOIN aluno a ON i.aluno_id = a.id";
-
-        // Conexão com o banco de dados usando a classe Conexao
         Conexao conexao = new Conexao();
-        try (Connection conn = conexao.getConexao(); 
-             PreparedStatement stmt = conn.prepareStatement(sql); 
-             ResultSet rs = stmt.executeQuery()) {
+        try {
 
-            // Processa os resultados da consulta SQL
-            while (rs.next()) {
-                Relatorio rel = new Relatorio();
-                rel.setDisciplina(rs.getString("disciplina"));
-                rel.setTurma(rs.getString("turma"));
-                rel.setAluno(rs.getString("aluno"));
-                rel.setNota(rs.getDouble("nota"));
-                relatorios.add(rel);
+            String sql = "SELECT d.nome AS disciplina, t.codigo_turma AS turma, a.nome AS aluno, t.nota "
+                    + "FROM turmas t "
+                    + "JOIN alunos a ON t.aluno_id = a.id "
+                    + "JOIN disciplina d ON t.disciplina_id = d.id "
+                    + "WHERE 1=1 ";
+
+            if (disciplinaId != null && !disciplinaId.isEmpty()) {
+                sql += "AND d.id = ? ";
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao gerar relatório de disciplinas.", e);
-        } finally {
-            conexao.closeConexao();  // Fecha a conexão após o uso
-        }
+            if (turmaId != null && !turmaId.isEmpty()) {
+                sql += "AND t.id = ? ";
+            }
 
-        return relatorios;
+            PreparedStatement ps = conexao.getConexao().prepareStatement(sql);
+
+            int index = 1;
+            
+            if (disciplinaId != null && !disciplinaId.isEmpty()) {
+                ps.setInt(index++, Integer.parseInt(disciplinaId));
+            }
+            if (turmaId != null && !turmaId.isEmpty()) {
+                ps.setInt(index++, Integer.parseInt(turmaId));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Relatorio relatorio = new Relatorio();
+                relatorio.setDisciplina(rs.getString("disciplina"));
+                relatorio.setTurma(rs.getString("turma"));
+                relatorio.setAluno(rs.getString("aluno"));
+                relatorio.setNota(rs.getDouble("nota"));
+                relatorios.add(relatorio);
+            }
+
+            return relatorios;
+
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao gerar relatório: " + e.getMessage(), e);
+        } finally {
+            conexao.closeConexao(); 
+        }
     }
+
 }

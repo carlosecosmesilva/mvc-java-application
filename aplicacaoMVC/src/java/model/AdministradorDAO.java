@@ -154,4 +154,54 @@ public class AdministradorDAO {
 
     }
 
+    public ArrayList<Administrador> listarAdministradoresPendentes() throws SQLException {
+        ArrayList<Administrador> administradores = new ArrayList<>();
+        String sql = "SELECT id, nome, cpf, endereco FROM administrador WHERE aprovado <> 'S' ";
+        Conexao conexao = new Conexao();
+        try {
+            PreparedStatement preparedStatement;
+            preparedStatement = conexao.getConexao().prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Administrador admin = new Administrador();
+                admin.setId(rs.getInt("id"));
+                admin.setNome(rs.getString("nome"));
+                admin.setCpf(rs.getString("cpf"));
+                admin.setEndereco(rs.getString("endereco"));
+                administradores.add(admin);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar administradores pendentes: " + e.getMessage());
+        } finally {
+            conexao.closeConexao();
+        }
+        return administradores;
+    }
+
+    public void AprovarCadastro(int id) {
+        Conexao conexao = new Conexao();
+        PreparedStatement sql = null;
+
+        try {
+            sql = conexao.getConexao().prepareStatement(
+                    "UPDATE Administrador SET aprovado = 'S' WHERE id = ?"
+            );
+            sql.setInt(1, id);
+            sql.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao aprovar cadastro de administrador: " + e.getMessage(), e);
+
+        } finally {
+            try {
+                if (sql != null) {
+                    sql.close();
+                }
+                conexao.closeConexao();
+            } catch (SQLException e) {
+                throw new RuntimeException("Erro ao fechar recursos de conexão: " + e.getMessage(), e);
+            }
+        }
+    }
+
 }

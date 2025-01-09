@@ -39,7 +39,6 @@ public class RegistrarController extends HttpServlet {
         String cpf = request.getParameter("cpf");
         String senha = request.getParameter("senha");
         String senha2 = request.getParameter("senha2");
-        String aprovado = request.getParameter("aprovado");
 
         if (nome == null || nome.isEmpty() || 
             endereco == null || endereco.isEmpty() || 
@@ -64,7 +63,7 @@ public class RegistrarController extends HttpServlet {
         admin.setEndereco(endereco);
         admin.setCpf(cpf);
         admin.setSenha(senha);
-        admin.setAprovado(aprovado);
+        admin.setAprovado("N");
 
         AdministradorDAO administradorDao = new AdministradorDAO();
         boolean sucesso = false;

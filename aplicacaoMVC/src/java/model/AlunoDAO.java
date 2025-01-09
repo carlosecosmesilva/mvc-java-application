@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import entidade.Aluno;
+import java.util.List;
 
 public class AlunoDAO implements Dao<Aluno> {
 
@@ -129,5 +130,13 @@ public class AlunoDAO implements Dao<Aluno> {
             conexao.closeConexao();
         }
         return alunos;
+    }
+
+    public List<Aluno> getAlunosPorProfessor(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void atualizarNota(int alunoId, double novaNota) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

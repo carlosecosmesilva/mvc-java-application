@@ -30,8 +30,6 @@ public class ProfessorController extends HttpServlet {
         RequestDispatcher rd;
 
         try {
-            int professorId = Integer.parseInt(request.getParameter("professorId"));
-
             if (acao != null) {
                 switch (acao) {
                     case "Listar":
@@ -42,6 +40,7 @@ public class ProfessorController extends HttpServlet {
                         break;
 
                     case "ListarNotas":
+                        int professorId = Integer.parseInt(request.getParameter("professorId"));
                         ArrayList<Turma> turmas = turmaDAO.getTurmasProfessor(professorId);
                         request.setAttribute("turmas", turmas);
                         rd = request.getRequestDispatcher("/views/admin/professor/listaNotas.jsp");
@@ -49,10 +48,11 @@ public class ProfessorController extends HttpServlet {
                         break;
 
                     case "LancarNota":
+                        int professor_id = Integer.parseInt(request.getParameter("professorId"));
                         int turmaId = Integer.parseInt(request.getParameter("turmaId"));
                         Turma turma = turmaDAO.getTurma(turmaId);
                         
-                        if (turma != null && turma.getProfessorId() == professorId) {
+                        if (turma != null && turma.getProfessorId() == professor_id) {
                             request.setAttribute("turma", turma);
                             rd = request.getRequestDispatcher("/views/admin/professor/formLancarNota.jsp");
                             rd.forward(request, response);

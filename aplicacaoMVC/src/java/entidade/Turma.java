@@ -101,4 +101,11 @@ public class Turma {
         this.alunoNome = aluno_nome;
     }
 
+    public String getProfessorNome() {
+        return professorNome;
+    }
+
+    public String getDisciplinaNome() {
+        return disciplinaNome;
+    }
 }

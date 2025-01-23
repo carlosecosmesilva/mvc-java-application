@@ -62,7 +62,7 @@
                         </div>
 
                         <div>
-                            <input type="submit" name="acao" value="gerarRelatorio" class="btn btn-primary">
+                            <input type="submit" name="acao" value="gerarRelatorio" text="Gerar Relatório" class="btn btn-primary">
                             <a href="/aplicacaoMVC/admin/dashboard" class="btn btn-secondary">Voltar</a>
                         </div>
                     </form>

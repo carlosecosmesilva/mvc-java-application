@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
 <%@ page import="entidade.Turma" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
@@ -18,32 +17,42 @@
                 <h1>Área Restrita</h1>
                 <h2>Histórico de Notas</h2>
 
-                <!-- Verificação se a lista está vazia -->
-                <c:choose>
-                    <c:when test="${not empty turmasAluno}">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Disciplina/Turma</th>
-                                        <th scope="col">Nota</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach var="turma" items="${turmasAluno}">
-                                        <tr>
-                                            <td>${turma.disciplinaNome != null ? turma.disciplinaNome : "Desconhecida"} - ${turma.codigoTurma != null ? turma.codigoTurma : "Código Não Disponível"}</td>
-                                            <td>${turma.nota != null ? turma.nota : "Não lançada"}</td>
-                                        </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <p class="alert alert-warning">Você ainda não tem notas lançadas.</p>
-                    </c:otherwise>
-                </c:choose>
+                <%
+                    List<Turma> turmasAluno = (List<Turma>) request.getAttribute("turmasAluno");
+                    if (turmasAluno != null && !turmasAluno.isEmpty()) {
+                %>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Disciplina/Turma</th>
+                                <th scope="col">Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%
+                                for (Turma turma : turmasAluno) {
+                                    String disciplinaNome = turma.getDisciplinaNome() != null ? turma.getDisciplinaNome() : "Desconhecida";
+                                    String codigoTurma = turma.getCodigoTurma() != null ? turma.getCodigoTurma() : "Código Não Disponível";
+                                    String nota = turma.getNota() > 0 ? String.valueOf(turma.getNota()) : "Não lançada";
+                            %>
+                            <tr>
+                                <td><%= disciplinaNome %> - <%= codigoTurma %></td>
+                                <td><%= nota %></td>
+                            </tr>
+                            <%
+                                }
+                            %>
+                        </tbody>
+                    </table>
+                </div>
+                <%
+                } else {
+                %>
+                <p class="alert alert-warning">Você ainda não tem notas lançadas.</p>
+                <%
+                    }
+                %>
             </div>
         </div>
 

@@ -12,6 +12,7 @@ public class Aluno {
     private String cidade;
     private String bairro;
     private String cep;
+    private double nota;
 
     // Construtor para criar um novo aluno (com todos os campos)
     public Aluno(int id, String nome, String email, String celular, String cpf,
@@ -132,5 +133,9 @@ public class Aluno {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    public void setNota(double nota) {
+        this.nota = nota;
     }
 }

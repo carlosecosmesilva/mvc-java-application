@@ -20,8 +20,7 @@
                 <h1>Área Restrita</h1>
                 <h2>Lançar Nota para Aluno</h2>
 
-                <!-- Formulário para lançar a nota -->
-                <form action="/aplicacaoMVC/admin/TurmaController?acao=LancarNota" method="POST">
+                <form action="/aplicacaoMVC/admin/TurmaController?acao=lancarNotas" method="POST">
                     <div class="mb-3">
                         <label for="alunoId" class="form-label">Aluno</label>
                         <select class="form-select" id="alunoId" name="alunoId" required>

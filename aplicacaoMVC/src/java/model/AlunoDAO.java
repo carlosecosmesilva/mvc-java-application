@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import entidade.Aluno;
+import java.util.List;
 
 public class AlunoDAO implements Dao<Aluno> {
 
@@ -157,6 +158,33 @@ public class AlunoDAO implements Dao<Aluno> {
         } finally {
             conexao.closeConexao();
         }
+    }
+
+    public List<Aluno> getAlunosDaTurma(int turmaIdLancar, int professorId) throws SQLException {
+        List<Aluno> alunos = new ArrayList<>();
+        Conexao conexao = new Conexao();
+        String sql = "SELECT a.id, a.nome "
+                + "FROM alunos a "
+                + "INNER JOIN turmas t ON a.id = t.aluno_id "
+                + "WHERE t.id = ? AND t.professor_id = ?";
+
+        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
+            stmt.setInt(1, turmaIdLancar);
+            stmt.setInt(2, professorId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Aluno aluno = new Aluno();
+                    aluno.setId(rs.getInt("id"));
+                    aluno.setNome(rs.getString("nome"));
+
+                    alunos.add(aluno);
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao obter os alunos da turma: " + e.getMessage(), e);
+        }
+
+        return alunos;
     }
 
 }

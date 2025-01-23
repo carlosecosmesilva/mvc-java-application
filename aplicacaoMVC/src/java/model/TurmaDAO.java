@@ -1,5 +1,6 @@
 package model;
 
+import entidade.Aluno;
 import entidade.Turma;
 import java.sql.*;
 import java.util.ArrayList;
@@ -225,6 +226,31 @@ public class TurmaDAO {
         }
 
         return turmas;
+    }
+
+    public ArrayList<Aluno> listarNotas(int turmaId) throws SQLException {
+        ArrayList<Aluno> alunos = new ArrayList<>();
+        Conexao conexao = new Conexao();
+        String sql = "SELECT a.id, a.nome, tn.nota "
+                + "FROM aluno a "
+                + "INNER JOIN turma_aluno ta ON a.id = ta.aluno_id "
+                + "INNER JOIN turma_nota tn ON ta.turma_id = tn.turma_id AND ta.aluno_id = tn.aluno_id "
+                + "WHERE tn.turma_id = ?";
+
+        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
+            stmt.setInt(1, turmaId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Aluno aluno = new Aluno();
+                    aluno.setId(rs.getInt("id"));
+                    aluno.setNome(rs.getString("nome"));
+                    aluno.setNota(rs.getDouble("nota"));
+                    alunos.add(aluno);
+                }
+            }
+        }
+
+        return alunos;
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class RelatorioDAO {
 
-    public static List<Relatorio> gerarRelatorioDisciplinas(String disciplinaId, String turmaId) throws SQLException {
+    public static List<Relatorio> gerarRelatorioDisciplinas() throws SQLException {
         List<Relatorio> relatorios = new ArrayList<>();
         Conexao conexao = new Conexao();
         try {
@@ -18,24 +18,7 @@ public class RelatorioDAO {
                     + "JOIN disciplina d ON t.disciplina_id = d.id "
                     + "WHERE 1=1 ";
 
-            if (disciplinaId != null && !disciplinaId.isEmpty()) {
-                sql += "AND d.id = ? ";
-            }
-            if (turmaId != null && !turmaId.isEmpty()) {
-                sql += "AND t.id = ? ";
-            }
-
             PreparedStatement ps = conexao.getConexao().prepareStatement(sql);
-
-            int index = 1;
-            
-            if (disciplinaId != null && !disciplinaId.isEmpty()) {
-                ps.setInt(index++, Integer.parseInt(disciplinaId));
-            }
-            if (turmaId != null && !turmaId.isEmpty()) {
-                ps.setInt(index++, Integer.parseInt(turmaId));
-            }
-
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {

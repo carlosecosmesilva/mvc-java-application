@@ -154,53 +154,44 @@ public class AdministradorDAO {
 
     }
 
-    public ArrayList<Administrador> listarAdministradoresPendentes() throws SQLException {
-        ArrayList<Administrador> administradores = new ArrayList<>();
-        String sql = "SELECT id, nome, cpf, endereco FROM administrador WHERE aprovado <> 'S' ";
+    public ArrayList<Administrador> listarAdministradoresPendentes() {
+        ArrayList<Administrador> meusAdministradores = new ArrayList();
         Conexao conexao = new Conexao();
         try {
+            String selectSQL = "SELECT * FROM Administrador WHERE aprovado <> 'S' order by nome";
             PreparedStatement preparedStatement;
-            preparedStatement = conexao.getConexao().prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                Administrador admin = new Administrador();
-                admin.setId(rs.getInt("id"));
-                admin.setNome(rs.getString("nome"));
-                admin.setCpf(rs.getString("cpf"));
-                admin.setEndereco(rs.getString("endereco"));
-                administradores.add(admin);
+            preparedStatement = conexao.getConexao().prepareStatement(selectSQL);
+            ResultSet resultado = preparedStatement.executeQuery();
+            if (resultado != null) {
+                while (resultado.next()) {
+                    Administrador Administrador = new Administrador(resultado.getString("NOME"),
+                            resultado.getString("CPF"),
+                            resultado.getString("ENDERECO"),
+                            resultado.getString("SENHA"));
+                    Administrador.setId(Integer.parseInt(resultado.getString("id")));
+                    meusAdministradores.add(Administrador);
+                }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar administradores pendentes: " + e.getMessage());
+            throw new RuntimeException("Query de select (ListaDeAdministradores) incorreta");
         } finally {
             conexao.closeConexao();
         }
-        return administradores;
+        return meusAdministradores;
     }
 
     public void AprovarCadastro(int id) {
         Conexao conexao = new Conexao();
-        PreparedStatement sql = null;
-
         try {
-            sql = conexao.getConexao().prepareStatement(
-                    "UPDATE Administrador SET aprovado = 'S' WHERE id = ?"
-            );
+            PreparedStatement sql = conexao.getConexao()
+                    .prepareStatement("UPDATE Administrador SET aprovado = 'S' WHERE ID = ?");
             sql.setInt(1, id);
             sql.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao aprovar cadastro de administrador: " + e.getMessage(), e);
-
+            throw new RuntimeException("Erro ao executar a query de update: " + e.getMessage(), e);
         } finally {
-            try {
-                if (sql != null) {
-                    sql.close();
-                }
-                conexao.closeConexao();
-            } catch (SQLException e) {
-                throw new RuntimeException("Erro ao fechar recursos de conexão: " + e.getMessage(), e);
-            }
+            conexao.closeConexao();
         }
     }
 

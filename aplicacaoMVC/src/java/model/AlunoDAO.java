@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import entidade.Aluno;
-import java.util.List;
 
 public class AlunoDAO implements Dao<Aluno> {
 
@@ -132,11 +131,32 @@ public class AlunoDAO implements Dao<Aluno> {
         return alunos;
     }
 
-    public List<Aluno> getAlunosPorProfessor(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Aluno Logar(Aluno aluno) throws Exception {
+        Conexao conexao = new Conexao();
+        try {
+            String sql = "SELECT * FROM alunos WHERE cpf = ? AND senha = ? LIMIT 1";
+            PreparedStatement stmt = conexao.getConexao().prepareStatement(sql);
+            stmt.setString(1, aluno.getCpf());
+            stmt.setString(2, aluno.getSenha());
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Aluno al = new Aluno();
+                al.setId(rs.getInt("id"));
+                al.setNome(rs.getString("nome"));
+                al.setCpf(rs.getString("cpf"));
+                al.setEndereco(rs.getString("endereco"));
+                al.setSenha(rs.getString("senha"));
+                return al;
+            }
+
+            return null;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao logar: " + e.getMessage());
+        } finally {
+            conexao.closeConexao();
+        }
     }
 
-    public void atualizarNota(int alunoId, double novaNota) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

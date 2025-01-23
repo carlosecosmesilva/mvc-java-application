@@ -14,45 +14,28 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebFilter(filterName = "filtroRestrito", urlPatterns = {"/admin/*", "/professor/*", "/aluno/*"})
+@WebFilter(filterName = "filtroRestrito", urlPatterns = {"/admin/*"})
 public class filtroRestrito implements Filter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
 
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
 
-        Object usuarioLogado = httpRequest.getSession().getAttribute("usuario");
+        // Verifica o atributo "usuario" na sessão
+        Object usuario = req.getSession().getAttribute("usuario");
 
-        if (usuarioLogado == null) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
-            return;
+        if (usuario instanceof Administrador || usuario instanceof Professor || usuario instanceof Aluno) {
+            chain.doFilter(request, response); // Usuário autorizado, continua
+        } else {
+            res.sendRedirect(req.getContextPath() + "/home"); // Redireciona para a página inicial
         }
-
-        if (usuarioLogado instanceof Administrador) {
-            if (httpRequest.getRequestURI().startsWith(httpRequest.getContextPath() + "/admin/")) {
-                chain.doFilter(request, response);
-                return;
-            }
-        } else if (usuarioLogado instanceof Professor) {
-            if (httpRequest.getRequestURI().startsWith(httpRequest.getContextPath() + "/professor/")) {
-                chain.doFilter(request, response);
-                return;
-            }
-        } else if (usuarioLogado instanceof Aluno) {
-            if (httpRequest.getRequestURI().startsWith(httpRequest.getContextPath() + "/aluno/")) {
-                chain.doFilter(request, response);
-                return;
-            }
-        }
-
-        httpResponse.sendRedirect(httpRequest.getContextPath() + "/acessoNegado.jsp");
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig arg0) throws ServletException {
     }
 
     @Override

@@ -20,13 +20,13 @@ public class ProfessorDAO {
         } catch (SQLException e) {
             throw new SQLException("Erro ao inserir professor: " + e.getMessage(), e);
         } finally {
-            conexao.closeConexao(); 
+            conexao.closeConexao();
         }
     }
 
     public Professor getProfessor(int id) throws SQLException {
         String sql = "SELECT * FROM professores WHERE id = ?";
-        
+
         Conexao conexao = new Conexao();
         try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -46,10 +46,10 @@ public class ProfessorDAO {
         return null;
     }
 
-    public ArrayList<Professor> getAll()  throws SQLException {
+    public ArrayList<Professor> getAll() throws SQLException {
         ArrayList<Professor> professores = new ArrayList<>();
         String sql = "SELECT * FROM professores";
-        
+
         Conexao conexao = new Conexao();
         try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
@@ -63,14 +63,14 @@ public class ProfessorDAO {
                 professores.add(professor);
             }
         } finally {
-            conexao.closeConexao(); 
+            conexao.closeConexao();
         }
         return professores;
     }
 
     public void atualizar(Professor professor) throws SQLException {
         String sql = "UPDATE professores SET nome = ?, email = ?, cpf = ?, senha = ? WHERE id = ?";
-        
+
         Conexao conexao = new Conexao();
         try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
             stmt.setString(1, professor.getNome());
@@ -86,7 +86,7 @@ public class ProfessorDAO {
 
     public void excluir(int id) throws SQLException {
         String sql = "DELETE FROM professores WHERE id = ?";
-        
+
         Conexao conexao = new Conexao();
         try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -95,5 +95,30 @@ public class ProfessorDAO {
             conexao.closeConexao();
         }
     }
-    
+
+    public Professor Logar(Professor professor) throws Exception {
+        Conexao conexao = new Conexao();
+        try {
+            String sql = "SELECT * FROM professores WHERE cpf = ? AND senha = ? LIMIT 1";
+            PreparedStatement stmt = conexao.getConexao().prepareStatement(sql);
+            stmt.setString(1, professor.getCpf());
+            stmt.setString(2, professor.getSenha());
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Professor prof = new Professor();
+                prof.setId(rs.getInt("id"));
+                prof.setNome(rs.getString("nome"));
+                prof.setCpf(rs.getString("cpf"));
+                prof.setSenha(rs.getString("senha"));
+                return prof;
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao logar: " + e.getMessage());
+        } finally {
+            conexao.closeConexao();
+        }
+    }
+
 }

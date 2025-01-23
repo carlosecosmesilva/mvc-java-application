@@ -1,27 +1,32 @@
 package controller.admin;
 
-import entidade.Professor;
-import entidade.Turma;
-import model.ProfessorDAO;
-import model.TurmaDAO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.ProfessorDAO;
+import model.TurmaDAO;
+import entidade.Professor;
+import entidade.Turma;
 
 @WebServlet(name = "ProfessorController", urlPatterns = "/admin/ProfessorController")
 public class ProfessorController extends HttpServlet {
 
+    private TurmaDAO turmaDAO = new TurmaDAO(); 
+    private ProfessorDAO professorDAO = new ProfessorDAO();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String acao = request.getParameter("acao");
-        ProfessorDAO professorDAO = new ProfessorDAO();
-        TurmaDAO turmaDAO = new TurmaDAO();
+        professorDAO = new ProfessorDAO();
+        turmaDAO = new TurmaDAO();
         RequestDispatcher rd;
 
         try {
@@ -35,15 +40,18 @@ public class ProfessorController extends HttpServlet {
                         rd = request.getRequestDispatcher("/views/admin/professor/listaProfessores.jsp");
                         rd.forward(request, response);
                         break;
+
                     case "ListarNotas":
-                        ArrayList<Turma> turmas = turmaDAO.getTurmasPorProfessor(professorId);
+                        ArrayList<Turma> turmas = turmaDAO.getTurmasProfessor(professorId);
                         request.setAttribute("turmas", turmas);
                         rd = request.getRequestDispatcher("/views/admin/professor/listaNotas.jsp");
                         rd.forward(request, response);
                         break;
+
                     case "LancarNota":
                         int turmaId = Integer.parseInt(request.getParameter("turmaId"));
                         Turma turma = turmaDAO.getTurma(turmaId);
+                        
                         if (turma != null && turma.getProfessorId() == professorId) {
                             request.setAttribute("turma", turma);
                             rd = request.getRequestDispatcher("/views/admin/professor/formLancarNota.jsp");
@@ -67,51 +75,44 @@ public class ProfessorController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        professorDAO = new ProfessorDAO();
         try {
-            String acao = request.getParameter("acao");
-
-            if ("LancarNota".equals(acao)) {
-                int alunoId = Integer.parseInt(request.getParameter("alunoId"));
-                int professorId = Integer.parseInt(request.getParameter("professorId"));
-                int disciplinaId = Integer.parseInt(request.getParameter("disciplinaId"));
-                String codigoTurma = request.getParameter("codigoTurma");
-                double nota = Double.parseDouble(request.getParameter("nota"));
-
-                Turma turma = new Turma(professorId, disciplinaId, alunoId, codigoTurma, nota);
-                TurmaDAO turmaDAO = new TurmaDAO();
-                turmaDAO.lancarNota(turma);
-
-                request.setAttribute("msgOperacaoRealizada", "Nota lançada com sucesso.");
-                request.setAttribute("link", "/aplicacaoMVC/admin/ProfessorController?acao=ListarNotas&professorId=" + professorId);
-                RequestDispatcher rd = request.getRequestDispatcher("/views/comum/showMessage.jsp");
-                rd.forward(request, response);
-                return;
-            }
-
+            int id = Integer.parseInt(request.getParameter("id"));
             String nome = request.getParameter("nome");
             String email = request.getParameter("email");
             String cpf = request.getParameter("cpf");
             String senha = request.getParameter("senha");
             String btEnviar = request.getParameter("btEnviar");
-            int id = Integer.parseInt(request.getParameter("id"));
+
+            if (nome.isEmpty() || email.isEmpty() || cpf.isEmpty() || senha.isEmpty()) {
+                Professor professor = (btEnviar.equals("Alterar") || btEnviar.equals("Excluir"))
+                        ? new Professor(id)
+                        : new Professor();
+                request.setAttribute("professor", professor);
+                request.setAttribute("acao", btEnviar);
+                request.setAttribute("msgError", "É necessário preencher todos os campos obrigatórios.");
+                request.getRequestDispatcher("/views/admin/professor/formProfessor.jsp").forward(request, response);
+                return;
+            }
 
             Professor professor = new Professor(id, nome, email, cpf, senha);
-            ProfessorDAO professorDAO = new ProfessorDAO();
+
             RequestDispatcher rd;
 
             switch (btEnviar) {
                 case "Incluir":
                     professorDAO.inserir(professor);
-                    request.setAttribute("msgOperacaoRealizada", "Professor incluído com sucesso.");
+                    request.setAttribute("msgOperacaoRealizada", "Inclusão realizada com sucesso.");
                     break;
                 case "Alterar":
                     professorDAO.atualizar(professor);
-                    request.setAttribute("msgOperacaoRealizada", "Professor alterado com sucesso.");
+                    request.setAttribute("msgOperacaoRealizada", "Alteração realizada com sucesso.");
                     break;
                 case "Excluir":
                     professorDAO.excluir(id);
-                    request.setAttribute("msgOperacaoRealizada", "Professor excluído com sucesso.");
+                    request.setAttribute("msgOperacaoRealizada", "Exclusão realizada com sucesso.");
                     break;
             }
 
@@ -119,9 +120,9 @@ public class ProfessorController extends HttpServlet {
             rd = request.getRequestDispatcher("/views/comum/showMessage.jsp");
             rd.forward(request, response);
 
-        } catch (SQLException | ServletException | NumberFormatException ex) {
-            request.setAttribute("errorMessage", "Erro ao processar a solicitação: " + ex.getMessage());
-            request.getRequestDispatcher("/views/comum/erro.jsp").forward(request, response);
+        } catch (IOException | NumberFormatException | SQLException | ServletException e) {
+            Logger.getLogger(ProfessorController.class.getName()).log(Level.SEVERE, null, e);
         }
     }
+
 }

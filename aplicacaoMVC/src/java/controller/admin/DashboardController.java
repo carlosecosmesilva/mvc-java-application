@@ -1,8 +1,6 @@
 package controller.admin;
 
-import entidade.Relatorio;
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,9 +16,6 @@ public class DashboardController extends HttpServlet {
         String acao = request.getParameter("acao");
         try {
             if ("relatorio".equals(acao)) {
-                RelatorioDAO relatorioDAO = new RelatorioDAO();
-                //List<Relatorio> relatorios = relatorioDAO.gerarRelatorioDisciplinas();
-                //request.setAttribute("relatorios", relatorios);
                 request.getRequestDispatcher("views/admin/dashboard/relatorio.jsp").forward(request, response);
             } else {
                 request.getRequestDispatcher("/views/admin/dashboard/areaRestrita.jsp").forward(request, response);

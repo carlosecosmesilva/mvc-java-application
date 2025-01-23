@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/entidade/Turma.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/admin/AlunoController.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/filtro/filtroRestrito.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/controller/AutenticaController.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/web/views/admin/aluno/historicoNotas.jsp</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/src/java/model/Conexao.java</file>
+            <file>file:/D:/Github/mvc-java-application/aplicacaoMVC/web/views/admin/aluno/listaAlunos.jsp</file>
         </group>
     </open-files>
 </project-private>

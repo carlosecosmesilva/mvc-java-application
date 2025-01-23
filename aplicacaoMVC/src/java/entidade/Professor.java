@@ -29,6 +29,12 @@ public class Professor {
     public Professor(int id) {
         this.id = id;
     }
+    
+    //Construtor para login
+    public Professor(String cpf_user, String senha_user) {
+        this.cpf = cpf_user;
+        this.senha = senha_user;
+    }
 
     // Getters e Setters
     public int getId() {

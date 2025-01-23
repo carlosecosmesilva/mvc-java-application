@@ -18,10 +18,6 @@
             <div class="mt-5">
                 <h1>Área Restrita</h1>
                 <h2>Lista de Administradores para Aprovação</h2>
-
-                <!-- Botão de Incluir -->
-                <a href="/aplicacaoMVC/admin/AdministradorController?acao=Incluir" class="mb-2 btn btn-primary">Incluir</a>
-
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>

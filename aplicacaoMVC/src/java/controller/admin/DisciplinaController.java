@@ -4,6 +4,8 @@ import entidade.Disciplina;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -50,8 +52,7 @@ public class DisciplinaController extends HttpServlet {
                 }
             }
         } catch (IOException | NumberFormatException | SQLException | ServletException e) {
-            request.setAttribute("mensagemErro", "Erro ao processar a ação: " + e.getMessage());
-            request.getRequestDispatcher("/views/comum/erro.jsp").forward(request, response);
+            Logger.getLogger(DisciplinaController.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -66,7 +67,6 @@ public class DisciplinaController extends HttpServlet {
             String ementa = request.getParameter("ementa");
             int cargaHoraria = Integer.parseInt(request.getParameter("cargaHoraria"));
 
-            // Verificar se os campos obrigatórios estão preenchidos
             if (nome.isEmpty() || requisito.isEmpty() || ementa.isEmpty()) {
                 request.setAttribute("disciplina", new Disciplina(id, nome, requisito, ementa, cargaHoraria));
                 request.setAttribute("btEnviar", btEnviar);
@@ -94,14 +94,12 @@ public class DisciplinaController extends HttpServlet {
                     break;
             }
 
-            // Redirecionamento para a página de listagem de disciplinas
             request.setAttribute("link", "/aplicacaoMVC/admin/DisciplinaController?acao=Listar");
             rd = request.getRequestDispatcher("/views/comum/showMessage.jsp");
             rd.forward(request, response);
 
-        } catch (IOException | NumberFormatException | SQLException | ServletException ex) {
-            request.setAttribute("errorMessage", "Erro ao processar a solicitação: " + ex.getMessage());
-            request.getRequestDispatcher("/views/comum/erro.jsp").forward(request, response);
+        } catch (IOException | NumberFormatException | SQLException | ServletException e) {
+            Logger.getLogger(DisciplinaController.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 }

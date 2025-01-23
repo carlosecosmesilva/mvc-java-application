@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.DisciplinaDAO;
 import model.RelatorioDAO;
 import model.TurmaDAO;
@@ -36,16 +38,14 @@ public class RelatorioController extends HttpServlet {
 
             String acao = request.getParameter("acao");
             if ("gerarRelatorio".equals(acao)) {
-                List<Relatorio> relatorios = RelatorioDAO.gerarRelatorioDisciplinas(disciplinaId, turmaId);
+                List<Relatorio> relatorios = RelatorioDAO.gerarRelatorioDisciplinas();
                 request.setAttribute("relatorios", relatorios);
             }
 
-            // Encaminha para a página JSP
             request.getRequestDispatcher("/views/admin/relatorios/formRelatorio.jsp").forward(request, response);
 
         } catch (IOException | SQLException | ServletException e) {
-            request.setAttribute("msgError", "Ocorreu um erro ao gerar o relatório: " + e.getMessage());
-            request.getRequestDispatcher("/views/admin/relatorio.jsp").forward(request, response);
+            Logger.getLogger(RelatorioController.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 }

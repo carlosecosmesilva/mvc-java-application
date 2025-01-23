@@ -105,23 +105,126 @@ public class TurmaDAO {
         }
     }
 
-    public void lancarNota(Turma turma) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int contarTurmasDoProfessor(int professorId) throws SQLException {
+        Conexao conexao = new Conexao();
+        try {
+            String sql = "SELECT COUNT(*) AS total FROM turmas WHERE professor_id = ?";
+            PreparedStatement stmt = conexao.getConexao().prepareStatement(sql);
+            stmt.setInt(1, professorId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao contar turmas do professor: " + e.getMessage());
+        } finally {
+            conexao.closeConexao();
+        }
     }
 
-    public ArrayList<Turma> getNotasPorTurma(int turmaId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean isAlunoNaTurma(int alunoId, int turmaId) throws SQLException {
+        Conexao conexao = new Conexao();
+        String sql = "SELECT COUNT(*) FROM turmas WHERE id = ? AND aluno_id = ?";
+        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
+            stmt.setInt(1, turmaId);
+            stmt.setInt(2, alunoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao contar turmas do professor: " + e.getMessage());
+        } finally {
+            conexao.closeConexao();
+            return false;
+        }
     }
 
-    public ArrayList<Turma> getTurmasPorProfessor(int professorId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean atualizarNota(int alunoId, int turmaId, double nota) throws SQLException {
+        Conexao conexao = new Conexao();
+        String sql = "UPDATE turmas SET nota = ? WHERE id = ? AND aluno_id = ?";
+        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
+            stmt.setDouble(1, nota);
+            stmt.setInt(2, turmaId);
+            stmt.setInt(3, alunoId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao contar turmas do professor: " + e.getMessage());
+        } finally {
+            conexao.closeConexao();
+            return false;
+        }
     }
 
-    public void adicionarAluno(int turmaId, int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ArrayList<Turma> getTurmasAluno(int alunoId) throws SQLException {
+        Conexao conexao = new Conexao();
+        ArrayList<Turma> turmas = new ArrayList<>();
+
+        String sql;
+        sql = "SELECT t.id, t.professor_id, t.disciplina_id, t.aluno_id, t.codigo_turma, t.nota,"
+                + " p.nome AS professor_nome, d.nome AS disciplina_nome "
+                + " FROM turmas t "
+                + " INNER JOIN professores p ON t.professor_id = p.id"
+                + " INNER JOIN disciplina d ON t.disciplina_id = d.id "
+                + " WHERE t.aluno_id = ?";
+
+        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
+            stmt.setInt(1, alunoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Turma turma = new Turma();
+                    turma.setId(rs.getInt("id"));
+                    turma.setProfessorId(rs.getInt("professor_id"));
+                    turma.setDisciplinaId(rs.getInt("disciplina_id"));
+                    turma.setAlunoId(rs.getInt("aluno_id"));
+                    turma.setCodigoTurma(rs.getString("codigo_turma"));
+                    turma.setNota(rs.getDouble("nota"));
+                    turma.setProfessorNome(rs.getString("professor_nome"));
+                    turma.setDisciplinaNome(rs.getString("disciplina_nome"));
+
+                    turmas.add(turma);
+                }
+            }
+        }
+
+        return turmas;
     }
 
-    public ArrayList<Turma> getTurmasAluno(int alunoId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ArrayList<Turma> getTurmasProfessor(int professorId) throws SQLException {
+        ArrayList<Turma> turmas = new ArrayList<>();
+        Conexao conexao = new Conexao();
+        String sql = " SELECT t.id, t.professor_id, t.disciplina_id, t.aluno_id, t.codigo_turma, t.nota, "
+                + " a.nome AS aluno_nome, d.nome AS disciplina_nome "
+                + " FROM turmas t "
+                + " INNER JOIN alunos a ON t.aluno_id = a.id "
+                + " INNER JOIN disciplina d ON t.disciplina_id = d.id "
+                + " WHERE t.professor_id = ?";
+
+        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
+            stmt.setInt(1, professorId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Turma turma = new Turma();
+                    turma.setId(rs.getInt("id"));
+                    turma.setProfessorId(rs.getInt("professor_id"));
+                    turma.setDisciplinaId(rs.getInt("disciplina_id"));
+                    turma.setAlunoId(rs.getInt("aluno_id"));
+                    turma.setCodigoTurma(rs.getString("codigo_turma"));
+                    turma.setNota(rs.getDouble("nota"));
+
+                    // Adicionais para exibição
+                    turma.setAlunoNome(rs.getString("aluno_nome"));
+                    turma.setDisciplinaNome(rs.getString("disciplina_nome"));
+
+                    turmas.add(turma);
+                }
+            }
+        }
+
+        return turmas;
     }
+
 }

@@ -101,7 +101,6 @@ public class DisciplinaDAO {
         }
     }
 
-    // Listar as disciplinas com vagas
     public ArrayList<Disciplina> listarDisciplinasComVagas() throws SQLException {
         ArrayList<Disciplina> disciplinas = new ArrayList<>();
         // Número fixo de vagas por disciplina
@@ -130,6 +129,33 @@ public class DisciplinaDAO {
                 }
             }
         }
+        return disciplinas;
+    }
+
+    public List<Disciplina> listarDisciplinasAluno(int alunoId) throws SQLException {
+        Conexao conexao = new Conexao();
+        List<Disciplina> disciplinas = new ArrayList<>();
+        
+        String sql = "SELECT d.id, d.nome, d.requisito, d.ementa, d.carga_horaria "
+                + " FROM disciplina d "
+                + " INNER JOIN turmas t ON d.id = t.disciplina_id "
+                + " WHERE t.aluno_id = ?";
+
+        try (PreparedStatement stmt = conexao.getConexao().prepareStatement(sql)) {
+            stmt.setInt(1, alunoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Disciplina disciplina = new Disciplina();
+                    disciplina.setId(rs.getInt("id"));
+                    disciplina.setNome(rs.getString("nome"));
+                    disciplina.setRequisito(rs.getString("requisito"));
+                    disciplina.setEmenta(rs.getString("ementa"));
+                    disciplina.setCargaHoraria(rs.getInt("carga_horaria"));
+                    disciplinas.add(disciplina);
+                }
+            }
+        }
+
         return disciplinas;
     }
 

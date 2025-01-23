@@ -20,6 +20,8 @@ import model.AdministradorDAO;
 @WebServlet(name = "RegistrarController", urlPatterns = {"/RegistrarController"})
 public class RegistrarController extends HttpServlet {
 
+    private final AdministradorDAO administradorDao = new AdministradorDAO();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,18 +35,19 @@ public class RegistrarController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String nome = request.getParameter("nome");
         String endereco = request.getParameter("endereco");
         String cpf = request.getParameter("cpf");
         String senha = request.getParameter("senha");
         String senha2 = request.getParameter("senha2");
+        String aprovado = request.getParameter("aprovado");
 
-        if (nome == null || nome.isEmpty() || 
-            endereco == null || endereco.isEmpty() || 
-            cpf == null || cpf.isEmpty() || 
-            senha == null || senha.isEmpty()) {
-            
+        if (nome == null || nome.isEmpty()
+                || endereco == null || endereco.isEmpty()
+                || cpf == null || cpf.isEmpty()
+                || senha == null || senha.isEmpty()) {
+
             request.setAttribute("msgError", "Todos os campos são obrigatórios!");
             RequestDispatcher rd = request.getRequestDispatcher("/views/registro/formRegistro.jsp");
             rd.forward(request, response);
@@ -63,9 +66,8 @@ public class RegistrarController extends HttpServlet {
         admin.setEndereco(endereco);
         admin.setCpf(cpf);
         admin.setSenha(senha);
-        admin.setAprovado("N");
+        admin.setAprovado(aprovado);
 
-        AdministradorDAO administradorDao = new AdministradorDAO();
         boolean sucesso = false;
         try {
             sucesso = administradorDao.Inserir(admin);

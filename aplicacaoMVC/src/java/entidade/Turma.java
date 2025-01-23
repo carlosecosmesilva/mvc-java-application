@@ -4,10 +4,13 @@ public class Turma {
 
     private int id;
     private int professorId;
+    private String professorNome;
+    private String disciplinaNome;
     private int disciplinaId;
     private int alunoId;
     private String codigoTurma;
     private double nota;
+    private String alunoNome;
 
     // Construtor padrão
     public Turma() {
@@ -86,11 +89,16 @@ public class Turma {
         this.nota = nota;
     }
 
-    public int getNumeroVagas() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void setProfessorNome(String professor_nome) {
+        this.professorNome = professor_nome;
     }
 
-    public boolean isNotaLancada(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void setDisciplinaNome(String disciplina_nome) {
+        this.disciplinaNome = disciplina_nome;
     }
+
+    public void setAlunoNome(String aluno_nome) {
+        this.alunoNome = aluno_nome;
+    }
+
 }

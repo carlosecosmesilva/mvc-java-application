@@ -73,7 +73,7 @@ public class AdministradorController extends HttpServlet {
             request.setAttribute("listaPendentes", pendentes);
             RequestDispatcher rd = request.getRequestDispatcher("/views/admin/administrador/listaPendentes.jsp");
             rd.forward(request, response);
-        } catch (IOException | SQLException | ServletException ex) {
+        } catch (IOException | ServletException ex) {
             throw new RuntimeException("Erro ao listar administradores pendentes.", ex);
         }
     }
